@@ -1,12 +1,13 @@
 <template>
-	<input  ref="inputt" :value='value'  @input="emit">
+	<input  ref="inputt" :value='value' :placeholder="placeholder"  @input="emit">
 </template>
 
 <script> 
 		export default {
 		name: "myInput",
 		props: [ 
-			"value"
+			"value",
+			"placeholder"
 		],
 		methods: {
 			emit()
@@ -18,5 +19,8 @@
 </script>
 
 <style scoped>
-
+	input{
+		max-width: 100%;
+		width: 96%;
+	}
 </style>

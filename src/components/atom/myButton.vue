@@ -10,12 +10,15 @@
 		],
 		methods: {
 			action(){
-				this.$emit("click", this.$refs.button.value);
+				this.$emit("click", {key:this.$refs.button.value});
 			}
 		}
 	};
 </script>
 
 <style scoped>
-
+	button{
+		max-width: 100%;
+		width: 100%;
+	}
 </style>

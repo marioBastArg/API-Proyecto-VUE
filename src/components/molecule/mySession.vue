@@ -8,7 +8,7 @@
 <script>
 	import myButton from '../atom/myButton';
 		export default {
-		name: "mySearch",
+		name: "mySession",
 		data(){
 			return{
 				valuee:0,
@@ -36,5 +36,5 @@
 </script>
 
 <style scoped>
-
+	
 </style>

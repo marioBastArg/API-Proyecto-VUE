@@ -1,5 +1,5 @@
 <template>
-  <div id="appi">
+  <div id="mapi">
     <router-view/>
   </div>
 </template>
