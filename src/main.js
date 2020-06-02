@@ -8,12 +8,16 @@ import VueLocalStorage from 'vue-localstorage'
 Vue.config.productionTip = false
 Vue.use(VueGeolocation)
 
-new Vue({
+let vm = new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount('#app').use(VueLocalStorage, {
+});
+
+vm.use(VueLocalStorage, {
   name: '',
   id: '',
   token: ''
-})
+});
+
+vm.$mount('#app');
