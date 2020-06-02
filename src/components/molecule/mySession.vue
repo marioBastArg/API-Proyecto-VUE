@@ -1,37 +1,47 @@
 <template>
-	<div id="mySession">
-		<my-button v-if="!session" @click="register">Registrarme</my-button>
-		<my-button v-if="!session" @click="login">IniciarSession</my-button>
-		<my-button v-if="session" @click="logout">logout</my-button>
+	<div id="mySession" :value="session">
+		<my-button v-if="session ==''" @click="register">Registrarme</my-button>
+		<my-button v-if="session ==''" @click="login">Iniciar Sesion</my-button>
+		<my-button v-if="session !=''" @click="logout">logout</my-button>
+		<my-button v-if="session !=''" @click="createPlace">Nuevo lugar</my-button>
 	</div>
 </template>
 <script>
 	import myButton from '../atom/myButton';
 		export default {
 		name: "mySession",
+		props:["session"],
 		data(){
 			return{
 				valuee:0,
-				session: false
 			}
 		},
 		methods: {
 			register()
 			{
-				this.valuee++;
+				this.$emit('register',true);
 			},
 			login()
 			{
-				this.session=true;
+				this.$emit('login',true);
 			},
 			logout()
 			{
-				this.session=false;
+				this.$emit('logout',true);
+			},
+			createPlace()
+			{
+				this.$emit('createPlace',true);
 			}
-		},
+		}/*,
+		watch:{
+			session(newSession){
+				loca
+			}
+		}*/,
 		components:{
 			myButton,
-		}
+		},
 	};
 </script>
 

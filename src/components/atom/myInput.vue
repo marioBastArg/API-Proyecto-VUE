@@ -1,18 +1,25 @@
 <template>
-	<input  ref="inputt" :value='value' :placeholder="placeholder"  @input="emit">
+	<input  ref='inputt' :value='value' :type='type' :name='name' :placeholder="placeholder"  @input="emit">
 </template>
 
 <script> 
-		export default {
+	export default {
 		name: "myInput",
 		props: [ 
 			"value",
-			"placeholder"
+			"placeholder",
+			"name",
+			"type"
+
 		],
 		methods: {
 			emit()
-			{
-				this.$emit('input', this.$refs.inputt.value)
+			{	
+				if (this.type!='file') {
+					this.$emit('input', this.$refs.inputt.value);
+				}else{
+					this.$emit('input', this.$refs.inputt);
+				}
 			}
 		},
 	};
@@ -21,6 +28,7 @@
 <style scoped>
 	input{
 		max-width: 100%;
-		width: 96%;
+		width: -webkit-fill-available;
+		width: -moz-available;
 	}
 </style>
