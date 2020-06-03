@@ -6,7 +6,8 @@
 			<ul v-if="storeValue!=''">
 			  <li v-for="(place,index) in storeValue" :key="index+'li'">
 			  	<my-button v-if="search(place)" @click="onClick({id:place.id})">{{ place.name }}</my-button>
-			  	<my-button v-if='computedName!= null && place.userId == computedId' classButton="crimson" @click='constructPlace(place)'>Modify</my-button>
+			  	<my-button v-if='computedName!= null && place.userId == computedId' classButton="blue" @click='constructUpdatePlace(place)'>Modificar</my-button>
+			  	<my-button v-if='computedName!= null && place.userId == computedId' classButton="crimson" @click='deletePlace(place.id)'>Eliminar</my-button>
 			  </li>
 			</ul>
 		</div>
@@ -72,6 +73,8 @@
 					this.sendRegister(value.form);
 				}else if (value.type=="registerPlace") {
 					this.sendnewPlace(value.form);
+				}else if (value.type=="updatePlace") {
+					this.sendUpdatePlace(value.form,valie.id);
 				}
 			},
 			constructlogin(){
@@ -103,23 +106,7 @@
 					]
 				};
 			},
-			constructPlace(place){
-				this.active = true;
-				this.formConstructor = {
-					title: "Registrar Lugar",
-					action: "postRegister",
-					submitType: "submit",
-					submitName: "registerPlace",
-					data:[
-						{title: "Nombre del lugar:",type:"text",name:"name",value:place.name},
-						{title: "Longitud:",type:"text",name:"lon",value:"",value:place.lon},
-						{title: "Latitud:",type:"text",name:"lat",value:place.lat},
-						{title: "Descripcion:",type:"text",name:"description",value:place.description},
-						{title: "Imagen:",type:"file",name:"image",scr:place.scr,value: ''}
-					]
-				};
-			},
-			constructUpdatePlace(){
+			constructUpdatePlace(place){
 				this.active = true;
 				this.formConstructor = {
 					title: "Modificar Lugar",
@@ -127,11 +114,30 @@
 					submitType: "submit",
 					submitName: "updatePlace",
 					data:[
+						{title: "Nombre del lugar:",type:"text",name:"name",value:place.name},
+						{title: "Longitud:",type:"text",name:"lon",value:"",value:place.lon},
+						{title: "Latitud:",type:"text",name:"lat",value:place.lat},
+						{title: "Descripcion:",type:"text",name:"description",value:place.description},
+						{title: "Imagen:",type:"file",name:"image",scr:place.scr,value: ''},
+
+					]
+				};
+
+			},
+			constructPlace(){
+				this.active = true;
+				this.formConstructor = {
+					title: "Registrar Lugar",
+					action: "postRegister",
+					submitType: "submit",
+					submitName: "registerPlace",
+					data:[
 						{title: "Nombre del lugar:",type:"text",name:"name",value:""},
 						{title: "Longitud:",type:"text",name:"lon",value:""},
 						{title: "Latitud:",type:"text",name:"lat",value:""},
 						{title: "Descripcion:",type:"text",name:"description",value:""},
-						{title: "Imagen:",type:"file",name:"image",value:""}
+						{title: "Imagen:",type:"file",name:"image",value:""},
+						{title: "",type:"hidden",name:"id",value: '1'}
 					]
 				};
 			},
@@ -183,6 +189,7 @@
 					setTimeout(()=>{
 						this.response = '';
 						this.active = false;
+						location.reload();
 					}, 5000);
 				}).catch((err) => {
 					this.response =  "Los datos no son correctos";
@@ -191,9 +198,9 @@
 					}, 5000);
 				});
 			},
-			sendUpdatePlace(e){
+			deletePlace(e){
 				console.log(this.localToken.replace(/['"]+/g, ''));
-				axios.post('http://localhost:3000/lugares/registerPlace',e,
+				axios.delete('http://localhost:3000/lugares/'+e,
 					{ headers:{'authorization': this.localToken.replace(/['"]+/g, '')} 
 				}).then((res) => {
 					console.log(res);
@@ -201,6 +208,26 @@
 					setTimeout(()=>{
 						this.response = '';
 						this.active = false;
+						location.reload();
+					}, 5000);
+				}).catch((err) => {
+					this.response =  "Los datos no son correctos";
+					setTimeout(()=>{
+						this.response = '';
+					}, 5000);
+				});
+			},
+			sendUpdatePlace(e,id){
+				console.log(this.localToken.replace(/['"]+/g, ''));
+				axios.put('http://localhost:3000/lugares/'+id,e,
+					{ headers:{'authorization': this.localToken.replace(/['"]+/g, '')} 
+				}).then((res) => {
+					console.log(res);
+					this.response =  res.data.message;
+					setTimeout(()=>{
+						this.response = '';
+						this.active = false;
+						location.reload();
 					}, 5000);
 				}).catch((err) => {
 					this.response =  "Los datos no son correctos";

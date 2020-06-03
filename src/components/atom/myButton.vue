@@ -23,6 +23,11 @@
 		width: 100%;
 	}
 	button.crimson{
+		background-color: #CD5C5C;
+		color: white;
+		text-transform: uppercase;
+	}
+	button.blue{
 		background-color: #3090C7;
 		color: white;
 		text-transform: uppercase;

@@ -22,7 +22,8 @@
 		props: ["myFormData","value","action","response"],
 		data(){
 			return{
-				myFiles:''
+				myFiles:'',
+				myid: ''
 			}
 		},
 		methods:{
@@ -32,13 +33,15 @@
 				e.target.elements.forEach((element) => {
 					if (element.type!="submit" && element.type!="file") {
 						formData.append(element.name, element.value)
+					}else if(element.type!="hidden"){
+						this.myid = element.id;
 					}
 				});	
 				if (this.myFiles!='') {
 					console.log(this.myFiles);
 					formData.append('image', this.myFiles);
 				}
-				this.$emit('myFormSubmit',{form:formData,type:this.myFormData.submitName});
+				this.$emit('myFormSubmit',{form:formData,type:this.myFormData.submitName,id:this.myid});
 
 			},
 			extractImg(e){
