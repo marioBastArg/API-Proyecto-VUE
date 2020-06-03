@@ -6,7 +6,8 @@
 			</div>
 			<div v-for="(field,index) in myFormData.data" :key="index+'form'">
 				<my-text>{{field.title}}</my-text>
-				<my-input :type="field.type" :name="field.name" :value="field.value"></my-input>
+				<my-input v-if="field.type!='file'" :type="field.type" :name="field.name" :value="field.value"></my-input>
+				<my-input v-if="field.type=='file'" :type="field.type" :value="field.value" @input="extractImg($event)"></my-input>
 			</div>	
 			<my-input :type="myFormData.submitType">{{myFormData.submitName}}</my-input>
 		</div>
@@ -29,16 +30,20 @@
 				var formData = new FormData();
 				e.preventDefault();
 				e.target.elements.forEach((element) => {
-					if (element.type!="submit") {
+					if (element.type!="submit" && element.type!="file") {
 						formData.append(element.name, element.value)
 					}
 				});	
-				if (this.myFiles.length>0) {
-					formData.append('img', this.myFiles[0]);
+				if (this.myFiles!='') {
+					console.log(this.myFiles);
+					formData.append('image', this.myFiles);
 				}
 				this.$emit('myFormSubmit',{form:formData,type:this.myFormData.submitName});
 
 			},
+			extractImg(e){
+				this.myFiles=e.files[0];
+			}
 
 		},
 		components:{

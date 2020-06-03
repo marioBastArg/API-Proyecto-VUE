@@ -1,6 +1,6 @@
 <template>
 	<div id="mySearchBar" :query="query">
-		<my-session :session="localName" @login="constructlogin" @logout="logout" @register="constructregister" @createPlace="constructPlace"></my-session>
+		<my-session :session="computedName" @login="constructlogin" @logout="logout" @register="constructregister" @createPlace="constructPlace"></my-session>
 		<my-input v-model="valuee" @input='search' placeholder="que buscas" type="text"></my-input>
 		<div>
 			<ul v-if="storeValue!=''">
@@ -150,6 +150,7 @@
 					});
 			},
 			sendRegister(e){
+				console.log(e);
 				axios.post('http://localhost:3000/usuarios/create', e)
 					.then((res) => {
 						this.response =  res.data.message;
@@ -184,7 +185,7 @@
 			},
 			logout(){
 				this.active = false;
-				this.$localStorage.set("Name",'');
+				this.$localStorage.set("name",'');
 				this.$localStorage.set("id",'');
 				this.$localStorage.set("token",'');
 				this.localid = this.$localStorage.get('id');
@@ -209,6 +210,9 @@
 			},
 			loginData(){
 				return this.formConstructor;
+			},
+			computedName(){
+				return this.localName;
 			}
 		},
 	};
