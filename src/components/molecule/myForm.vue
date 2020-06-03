@@ -34,7 +34,7 @@
 					}
 				});	
 				if (this.myFiles.length>0) {
-					formData.append('image', this.myFiles[0]);
+					formData.append('img', this.myFiles[0]);
 				}
 				this.$emit('myFormSubmit',{form:formData,type:this.myFormData.submitName});
 

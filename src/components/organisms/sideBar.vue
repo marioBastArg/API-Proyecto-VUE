@@ -1,6 +1,6 @@
 <template>
 	<div id="mySearchBar" :query="query">
-		<my-session :session="storegeid" @login="constructlogin" @logout="logout" @register="constructregister" @createPlace="constructPlace"></my-session>
+		<my-session :session="localName" @login="constructlogin" @logout="logout" @register="constructregister" @createPlace="constructPlace"></my-session>
 		<my-input v-model="valuee" @input='search' placeholder="que buscas" type="text"></my-input>
 		<div>
 			<ul v-if="storeValue!=''">
@@ -24,6 +24,15 @@
 	import myForm from '../molecule/myForm';
 	import VueLocalStorage from 'vue-localstorage'
 
+	/*axios.interceptors.request.use(
+		config => {
+			config.headers.authorization = 'Bearer '+ this.$localStorage.get('token');
+		},
+		error => {
+			return Promise.reject(error);
+		}
+	);*/
+
 		export default {
 		name: "mySearchBar",
 		props: ["query"],
@@ -35,16 +44,16 @@
 				active: false,
 				response: "",
 				sessionid: "",
-				localid: "",
-				localName: "",
-				localToken: ""
+				localid: '',
+				localName: '',
+				localToken: ''
 			}
 		},
 		mounted(){
-			this.localStorage.set('id','');
-			this.localStorage.set('name','');
-			this.localStorage.set('token','');
-			console.log(this.localStorage);
+			this.localid = this.$localStorage.get('id');
+			this.localName = this.$localStorage.get('name');
+			this.localToken = this.$localStorage.get('token');
+			console.log(this.$localStorage.get("id"));
 		},
 		methods: {
 			onClick(value)
@@ -114,16 +123,20 @@
 						{title: "Longitud:",type:"text",name:"lon",value:""},
 						{title: "Latitud:",type:"text",name:"lat",value:""},
 						{title: "Descripcion:",type:"text",name:"description",value:""},
-						{title: "Imagen:",type:"file",name:"img",value:""}
+						{title: "Imagen:",type:"file",name:"image",value:""}
 					]
 				};
 			},
 			sendLogin(e){
 				axios.post('http://localhost:3000/usuarios/login', e)
 					.then((res) => {
-						this.localStorage.Name=JSON.stringify(res.data.data.user.name);
-						this.localStorage.id=JSON.stringify(res.data.data.user.id);
-						this.localStorage.token=JSON.stringify(res.data.data.token);
+						this.$localStorage.set('name',JSON.stringify(res.data.data.user.name));
+						this.$localStorage.set('id',JSON.stringify(res.data.data.user.id));
+						this.$localStorage.set('token',JSON.stringify(res.data.data.token));
+						this.localid = this.$localStorage.get('id');
+						this.localName = this.$localStorage.get('name');
+						this.localToken = this.$localStorage.get('token');
+						console.log(this.$localStorage.get('id')," id");
 						this.response =  res.data.message;
 						setTimeout(()=>{
 							this.response = '';
@@ -152,26 +165,31 @@
 					});
 			},
 			sendnewPlace(e){
-				var auth = { Headers: { Authorization: localStorage.getItem('currentSessionToken') }};
-				axios.post('http://localhost:3000/lugares/registerPlace', e, auth)
-					.then((res) => {
-						this.response =  res.data.message;
-						setTimeout(()=>{
-							this.response = '';
-							this.active = false;
-						}, 5000);
-					}).catch((err) => {
-						this.response =  "Los datos no son correctos";
-						setTimeout(()=>{
-							this.response = '';
-						}, 5000);
-					});
+				console.log(this.localToken.replace(/['"]+/g, ''));
+				axios.post('http://localhost:3000/lugares/registerPlace',e,
+					{ headers:{'authorization': this.localToken.replace(/['"]+/g, '')} 
+				}).then((res) => {
+					console.log(res);
+					this.response =  res.data.message;
+					setTimeout(()=>{
+						this.response = '';
+						this.active = false;
+					}, 5000);
+				}).catch((err) => {
+					this.response =  "Los datos no son correctos";
+					setTimeout(()=>{
+						this.response = '';
+					}, 5000);
+				});
 			},
 			logout(){
 				this.active = false;
-				this.localStorage.Name='';
-				this.localStorage.id='';
-				this.localStorage.token='';
+				this.$localStorage.set("Name",'');
+				this.$localStorage.set("id",'');
+				this.$localStorage.set("token",'');
+				this.localid = this.$localStorage.get('id');
+				this.localName = this.$localStorage.get('name');
+				this.localToken = this.$localStorage.get('token');
 			}
 
 		},
@@ -191,15 +209,6 @@
 			},
 			loginData(){
 				return this.formConstructor;
-			},
-			storegeid(){
-				return this.localStorage.Name;
-			},
-			storegename(){
-				return this.localStorage.id;
-			},
-			storegeToken(){
-				return this.localStorage.token;				
 			}
 		},
 	};

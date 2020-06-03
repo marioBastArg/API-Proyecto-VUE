@@ -1,12 +1,14 @@
 <template>
-	<div id="mySession" :value="session">
-		<my-button v-if="session ==''" @click="register">Registrarme</my-button>
-		<my-button v-if="session ==''" @click="login">Iniciar Sesion</my-button>
-		<my-button v-if="session !=''" @click="logout">logout</my-button>
-		<my-button v-if="session !=''" @click="createPlace">Nuevo lugar</my-button>
+	<div id="mySession" :session="session">
+		<my-text>{{session}}</my-text>
+		<my-button v-if="myCurrentSession == null" @click="register">Registrarme</my-button>
+		<my-button v-if="myCurrentSession == null" @click="login">Iniciar Sesion</my-button>
+		<my-button v-if="myCurrentSession != null" @click="logout">logout</my-button>
+		<my-button v-if="myCurrentSession != null" @click="createPlace">Nuevo lugar</my-button>
 	</div>
 </template>
 <script>
+	import myText from '../atom/myText';
 	import myButton from '../atom/myButton';
 		export default {
 		name: "mySession",
@@ -33,14 +35,15 @@
 			{
 				this.$emit('createPlace',true);
 			}
-		}/*,
-		watch:{
-			session(newSession){
-				loca
+		},
+		computed:{
+			myCurrentSession(){
+				return this.session;
 			}
-		}*/,
+		},
 		components:{
 			myButton,
+			myText
 		},
 	};
 </script>
