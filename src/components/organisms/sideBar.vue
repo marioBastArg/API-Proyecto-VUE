@@ -6,6 +6,7 @@
 			<ul v-if="storeValue!=''">
 			  <li v-for="(place,index) in storeValue" :key="index+'li'">
 			  	<my-button v-if="search(place)" @click="onClick({id:place.id})">{{ place.name }}</my-button>
+			  	<my-button v-if='computedName!= null && place.userId == computedId' classButton="crimson" @click='constructPlace(place)'>Modify</my-button>
 			  </li>
 			</ul>
 		</div>
@@ -23,15 +24,6 @@
 	import myDescription from '../molecule/myDescription';
 	import myForm from '../molecule/myForm';
 	import VueLocalStorage from 'vue-localstorage'
-
-	/*axios.interceptors.request.use(
-		config => {
-			config.headers.authorization = 'Bearer '+ this.$localStorage.get('token');
-		},
-		error => {
-			return Promise.reject(error);
-		}
-	);*/
 
 		export default {
 		name: "mySearchBar",
@@ -111,13 +103,29 @@
 					]
 				};
 			},
-			constructPlace(){
+			constructPlace(place){
 				this.active = true;
 				this.formConstructor = {
 					title: "Registrar Lugar",
 					action: "postRegister",
 					submitType: "submit",
 					submitName: "registerPlace",
+					data:[
+						{title: "Nombre del lugar:",type:"text",name:"name",value:place.name},
+						{title: "Longitud:",type:"text",name:"lon",value:"",value:place.lon},
+						{title: "Latitud:",type:"text",name:"lat",value:place.lat},
+						{title: "Descripcion:",type:"text",name:"description",value:place.description},
+						{title: "Imagen:",type:"file",name:"image",scr:place.scr,value: ''}
+					]
+				};
+			},
+			constructUpdatePlace(){
+				this.active = true;
+				this.formConstructor = {
+					title: "Modificar Lugar",
+					action: "putRegister",
+					submitType: "submit",
+					submitName: "updatePlace",
 					data:[
 						{title: "Nombre del lugar:",type:"text",name:"name",value:""},
 						{title: "Longitud:",type:"text",name:"lon",value:""},
@@ -183,6 +191,24 @@
 					}, 5000);
 				});
 			},
+			sendUpdatePlace(e){
+				console.log(this.localToken.replace(/['"]+/g, ''));
+				axios.post('http://localhost:3000/lugares/registerPlace',e,
+					{ headers:{'authorization': this.localToken.replace(/['"]+/g, '')} 
+				}).then((res) => {
+					console.log(res);
+					this.response =  res.data.message;
+					setTimeout(()=>{
+						this.response = '';
+						this.active = false;
+					}, 5000);
+				}).catch((err) => {
+					this.response =  "Los datos no son correctos";
+					setTimeout(()=>{
+						this.response = '';
+					}, 5000);
+				});
+			},
 			logout(){
 				this.active = false;
 				this.$localStorage.set("name",'');
@@ -213,6 +239,9 @@
 			},
 			computedName(){
 				return this.localName;
+			},
+			computedId(){
+				return this.localid;
 			}
 		},
 	};
@@ -220,15 +249,16 @@
 
 <style scoped>
 	#mySearchBar{
-		height: 100%;
-		max-height: 100%;
-		padding: 10px;
+		height: 96%;
+		max-height: 100vh;
+		padding: 1%;
+		overflow: hidden;
+		overflow: scroll;
+		overflow-x: hidden;
 	}
 	ul{
 		padding: 0px;
-		max-height: 500px;
-	}
-	ul:hover{
+		max-height: 200px;
 		overflow: scroll;
 		overflow-x: hidden;
 	}

@@ -37,6 +37,7 @@
 	#map-view{
 		font-family: 'Open Sans', sans-serif;
 		max-height: 100vh;
+		height: 100vh;
 		width: 100%;
 		display: flex;
 	}

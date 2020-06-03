@@ -1,12 +1,13 @@
 <template>
-	<button ref="button" @click="action" :value="value"><slot></slot></button>
+	<button ref="button" :class="classButton" @click="action" :value="value"><slot></slot></button>
 </template>
 
 <script> 
 		export default {
 		name: "myButton",
 		props: [
-		 'value'
+		 'value',
+		 'classButton'
 		],
 		methods: {
 			action(){
@@ -20,5 +21,10 @@
 	button{
 		max-width: 100%;
 		width: 100%;
+	}
+	button.crimson{
+		background-color: #3090C7;
+		color: white;
+		text-transform: uppercase;
 	}
 </style>

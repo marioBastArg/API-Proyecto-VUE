@@ -1,5 +1,5 @@
 <template>
-	<input  ref='inputt' :value='value' :type='type' :name='name' :placeholder="placeholder"  @input="emit">
+	<input  ref='inputt' :scr='scr' :value='value' :type='type' :name='name' :placeholder="placeholder"  @input="emit">
 </template>
 
 <script> 
@@ -9,7 +9,8 @@
 			"value",
 			"placeholder",
 			"name",
-			"type"
+			"type",
+			"scr"
 
 		],
 		methods: {

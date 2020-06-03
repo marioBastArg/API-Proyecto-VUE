@@ -7,7 +7,7 @@
 			<div v-for="(field,index) in myFormData.data" :key="index+'form'">
 				<my-text>{{field.title}}</my-text>
 				<my-input v-if="field.type!='file'" :type="field.type" :name="field.name" :value="field.value"></my-input>
-				<my-input v-if="field.type=='file'" :type="field.type" :value="field.value" @input="extractImg($event)"></my-input>
+				<my-input v-if="field.type=='file'" :type="field.type" :scr="'http://localhost:3000/lugares/'+field.scr" style="crimson" :value="field.value" @input="extractImg($event)"></my-input>
 			</div>	
 			<my-input :type="myFormData.submitType">{{myFormData.submitName}}</my-input>
 		</div>
