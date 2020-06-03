@@ -119,7 +119,7 @@
 						{title: "Latitud:",type:"text",name:"lat",value:place.lat},
 						{title: "Descripcion:",type:"text",name:"description",value:place.description},
 						{title: "Imagen:",type:"file",name:"image",scr:place.scr,value: ''},
-
+						{title: "",type:"hidden",name:"id",value: palce.id}
 					]
 				};
 
@@ -137,7 +137,6 @@
 						{title: "Latitud:",type:"text",name:"lat",value:""},
 						{title: "Descripcion:",type:"text",name:"description",value:""},
 						{title: "Imagen:",type:"file",name:"image",value:""},
-						{title: "",type:"hidden",name:"id",value: '1'}
 					]
 				};
 			},
